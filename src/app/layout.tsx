@@ -32,11 +32,11 @@ export default function RootLayout({
         className={`${montserratSans.variable} ${montserratMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Navbar title="Groqqoli" links={[
+          <Navbar title="Groqqoli 👨‍🍳" links={[
+            { label: "About", href: "/core/about" },
             { label: "Cooking Chatbot", href: "/core/cooking-chatbot" },
-            { label: "Groq", href: "https://www.groq.com" },
-            { label: "Groq AI", href: "https://www.groq.com/ai" },
-            { label: "Groq AI Studio", href: "https://www.groq.com/ai-studio" },
+            { label: "Ingredient Vision", href: "/core/ingredient-vision" },
+            { label: "Recipe Assistant", href: "/core/voice-recipes" },
           ]} />
           {children}
         </ThemeProvider>

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Sun, Moon } from "lucide-react"
+import Image from "next/image"
 
 interface NavbarProps {
     title: string;
@@ -27,10 +28,26 @@ export default function Navbar({ title, links }: NavbarProps) {
     }, []);
 
     return (
-        <div className="flex justify-between items-center p-4 bg-[var(--groq-bg)]" id="navbar">
-            <a href="/">
-                <h1 className="text-2xl font-bold text-[var(--groq-fg)]">{title}</h1>
-            </a>
+        <div className="flex justify-between items-center p-4 bg-[var(--groq-bg)] navbar-border" id="navbar">
+            <div className="flex flex-col items-left space-x-4">
+                <a href="/">
+                    <h1 className="text-3xl font-extrabold text-[var(--groq-orange)] navbar-title">{title}</h1>
+                </a>
+                <p className="text-sm text-[var(--groq-fg)] flex items-center">
+                    Powered by
+                    {mounted && (
+                        <Link href="https://www.groq.com">
+                            <Image 
+                                src={theme === "dark" ? "/groqwhite.svg" : "/groqblack.svg"} 
+                                alt="Groq Logo" 
+                                width={40} 
+                                height={40} 
+                                className="ml-1" 
+                            />
+                        </Link>
+                    )}
+                </p>
+            </div>
             <div className="flex items-center space-x-4">
                 {links.map((link) => (
                     <Link
@@ -40,7 +57,8 @@ export default function Navbar({ title, links }: NavbarProps) {
                             pathname === link.href 
                                 ? "font-bold" 
                                 : "opacity-80 hover:opacity-100"
-                        } text-[var(--groq-fg)] transition-colors hover:bg-[var(--groq-bg-hover)] hover:text-[var(--groq-orange)] rounded-md`}
+                        }
+                                text-[var(--groq-fg)] transition-colors hover:bg-[var(--groq-bg-hover)] hover:text-[var(--groq-orange)] rounded-md navbar-link`}
                         style={{
                             cursor: "pointer",
                             textDecoration: "none",
