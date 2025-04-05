@@ -1,26 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Groq theme colors */
+  --groq-orange: #F55036;
+  --groq-bg: #ffffff;
+  --groq-bg-hover: #f7d8d3;
+  --groq-fg: rgb(5, 5, 5);
+  
+  /* Font variables */
+  --font-montserrat-sans: 'Montserrat', sans-serif;
+  --font-montserrat-mono: 'Montserrat Mono', monospace;
+}
+
+.dark {
+  /* Groq theme colors */
+  --groq-bg: rgb(5, 5, 5);
+  --groq-fg: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-montserrat-sans);
+  --font-mono: var(--font-montserrat-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--groq-bg);
+  color: var(--groq-fg);
+  font-family: var(--font-montserrat-sans);
 }
+
