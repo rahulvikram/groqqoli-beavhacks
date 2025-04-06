@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <>
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="">
       <div className="flex flex-row items-center justify-center space-x-3">
         <h1 className="text-4xl font-bold">An AI Cooking Assistant powered by</h1>
         {mounted && (
@@ -32,6 +32,7 @@ export default function Home() {
           </Link>
         )}
       </div>
+      <h3 className="text-center text-lg py-3 ">Built for BeaverHacks 2025</h3>
     </div>
     </>
   );

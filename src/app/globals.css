@@ -35,12 +35,12 @@ body {
 
 /* Add these new styles for the navbar */
 .navbar-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 900;
 }
 
 .navbar-link {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   padding: 0.5rem 0.75rem !important;
 }

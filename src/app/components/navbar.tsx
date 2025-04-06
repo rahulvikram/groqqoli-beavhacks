@@ -4,8 +4,10 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { Sun, Moon, LogIn } from "lucide-react"
+import { Sun, Moon, LogIn, ChefHat } from "lucide-react"
 import Image from "next/image"
+
+import NavLink from "./navlink"
 
 import {
     ClerkProvider,
@@ -41,7 +43,7 @@ export default function Navbar({ title, links }: NavbarProps) {
 
     return (
         <div className="sticky top-0 z-50 flex justify-between items-center p-4 bg-[var(--groq-bg)] navbar-border" id="navbar">
-            <div className="flex flex-col items-left space-x-4">
+            <div className="flex flex-row items-left space-x-4">
                 <a href="/">
                     <h1 className="text-3xl font-extrabold text-[var(--groq-orange)] navbar-title">{title}</h1>
                 </a>
@@ -60,39 +62,31 @@ export default function Navbar({ title, links }: NavbarProps) {
                     )}
                 </p>
             </div>
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4">
                 {links.map((link) => (
-                    <Link
-                        key={link.href}
-                        href={link.href}
-                        className={`${
-                            pathname === link.href 
-                                ? "font-bold bg-[var(--groq-bg-hover)] text-[var(--groq-orange)]" 
-                                : "opacity-80 hover:opacity-100"
-                        }
-                                text-[var(--groq-fg)] transition-colors hover:bg-[var(--groq-bg-hover)] hover:text-[var(--groq-orange)] rounded-md navbar-link`}
-                        style={{
-                            cursor: "pointer",
-                            textDecoration: "none",
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "0.4rem",
-                            transition: "all 0.2s ease"
-                        }}
-                    >
+                    <NavLink key={link.href} href={link.href}>
                         {link.label}
-                    </Link>
+                    </NavLink>
                 ))}
                 
                 {/* Sign In button - only show when not signed in */}
-                <header className="flex justify-end items-center p-4 gap-4 h-16">
-                    <SignedOut>
-                        <SignInButton />
-                        <SignUpButton />
-                    </SignedOut>
-                    <SignedIn>
-                        <UserButton />
-                    </SignedIn>
-                </header>
+                <SignedOut>
+                    <SignInButton>
+                        <button className="flex items-center space-x-2 text-[var(--groq-fg)] bg-[var(--groq-bg-hover)] hover:text-[var(--groq-orange)] rounded-md navbar-link px-3 py-1.5" style={{ cursor: "pointer" }}>
+                            <LogIn size={18} />
+                            <span>Sign In</span>
+                        </button>
+                    </SignInButton>
+                    <SignUpButton>
+                        <button className="flex items-center space-x-2 text-white bg-[var(--groq-orange)] hover:bg-[var(--groq-orange)]/90 rounded-md navbar-link px-3 py-1.5" style={{ cursor: "pointer" }}>
+                            <ChefHat size={18} />
+                            <span>Sign Up</span>
+                        </button>
+                    </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                    <UserButton />
+                </SignedIn>
                 
                 {mounted && (
                     <button
