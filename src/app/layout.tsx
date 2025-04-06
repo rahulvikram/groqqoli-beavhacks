@@ -13,6 +13,7 @@ import {
 } from '@clerk/nextjs'
 
 import Navbar from "./components/navbar";
+import { DotPattern } from "@/components/magicui/dot-pattern";
 
 // set up fonts for layout
 const montserratSans = Montserrat({
@@ -45,16 +46,24 @@ export default function RootLayout({
     <ClerkProvider> 
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${montserratSans.variable} ${montserratMono.variable} antialiased`}
+          className={`${montserratSans.variable} ${montserratMono.variable} antialiased relative`}
         >
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            {/* Position the grid as a fixed background */}
+            <div className="fixed inset-0 -z-10 w-full h-full overflow-hidden">
+              <DotPattern 
+                className="opacity-30"
+              />
+            </div>
+            
             <Navbar title="Groqqoli 👨‍🍳" links={[
               { label: "About", href: "/core/about" },
               { label: "Cooking Chatbot", href: "/core/cooking-chatbot" },
               { label: "Ingredient Vision", href: "/core/ingredient-vision" },
               { label: "Recipe Assistant", href: "/core/voice-recipes" },
             ]} />
-            <div className="mt-16">
+            
+            <div className="mt-16 relative z-10">
               {children}
             </div>
           </ThemeProvider>
