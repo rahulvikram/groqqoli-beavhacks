@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    GROQ_API_KEY: process.env.GROQ_API_KEY,
+  },
+
   // Enable Fast Refresh and live server reload
   reactStrictMode: true,
   webpack: (config, { isServer, dev }) => {
