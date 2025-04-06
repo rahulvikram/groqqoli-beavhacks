@@ -4,8 +4,17 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { Sun, Moon } from "lucide-react"
+import { Sun, Moon, LogIn } from "lucide-react"
 import Image from "next/image"
+
+import {
+    ClerkProvider,
+    SignInButton,
+    SignUpButton,
+    SignedIn,
+    SignedOut,
+    UserButton,
+  } from '@clerk/nextjs'
 
 interface NavbarProps {
     title: string;
@@ -21,6 +30,9 @@ export default function Navbar({ title, links }: NavbarProps) {
     // set up theme switching hooks
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
+    
+    // Add authentication state (this would be replaced with your actual auth logic)
+    const [isSignedIn, setIsSignedIn] = React.useState(false);
 
     // Avoid hydration mismatch by only showing the button after mounting
     React.useEffect(() => {
@@ -28,7 +40,7 @@ export default function Navbar({ title, links }: NavbarProps) {
     }, []);
 
     return (
-        <div className="flex justify-between items-center p-4 bg-[var(--groq-bg)] navbar-border" id="navbar">
+        <div className="sticky top-0 z-50 flex justify-between items-center p-4 bg-[var(--groq-bg)] navbar-border" id="navbar">
             <div className="flex flex-col items-left space-x-4">
                 <a href="/">
                     <h1 className="text-3xl font-extrabold text-[var(--groq-orange)] navbar-title">{title}</h1>
@@ -48,14 +60,14 @@ export default function Navbar({ title, links }: NavbarProps) {
                     )}
                 </p>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
                 {links.map((link) => (
                     <Link
                         key={link.href}
                         href={link.href}
                         className={`${
                             pathname === link.href 
-                                ? "font-bold" 
+                                ? "font-bold bg-[var(--groq-bg-hover)] text-[var(--groq-orange)]" 
                                 : "opacity-80 hover:opacity-100"
                         }
                                 text-[var(--groq-fg)] transition-colors hover:bg-[var(--groq-bg-hover)] hover:text-[var(--groq-orange)] rounded-md navbar-link`}
@@ -71,6 +83,17 @@ export default function Navbar({ title, links }: NavbarProps) {
                     </Link>
                 ))}
                 
+                {/* Sign In button - only show when not signed in */}
+                <header className="flex justify-end items-center p-4 gap-4 h-16">
+                    <SignedOut>
+                        <SignInButton />
+                        <SignUpButton />
+                    </SignedOut>
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
+                </header>
+                
                 {mounted && (
                     <button
                         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -78,7 +101,6 @@ export default function Navbar({ title, links }: NavbarProps) {
                         aria-label="Toggle theme"
                         style={{
                             cursor: "pointer",
-                            
                         }}
                     >
                         {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
