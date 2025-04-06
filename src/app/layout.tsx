@@ -58,7 +58,6 @@ export default function RootLayout({
             
             <Navbar title="Groqqoli 👨‍🍳" links={[
               { label: "About", href: "/core/about" },
-              { label: "Cooking Chatbot", href: "/core/cooking-chatbot" },
               { label: "Ingredient Vision", href: "/core/ingredient-vision" },
               { label: "Recipe Assistant", href: "/core/voice-recipes" },
             ]} />
