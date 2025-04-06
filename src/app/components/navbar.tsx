@@ -85,7 +85,7 @@ export default function Navbar({ title, links }: NavbarProps) {
                     </SignUpButton>
                 </SignedOut>
                 <SignedIn>
-                    <UserButton />
+                    <UserButton showName={true} />
                 </SignedIn>
                 
                 {mounted && (
