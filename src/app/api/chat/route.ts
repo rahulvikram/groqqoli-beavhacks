@@ -1,5 +1,6 @@
 import { createGroq } from "@ai-sdk/groq";
-import { StreamingTextResponse, Message as AIMessage, streamText } from "ai";
+
+import { streamText, Message as AIMessage } from "ai";
 
 const groq = createGroq({
     apiKey: process.env.GROQ_API_KEY
@@ -62,17 +63,22 @@ export async function POST(req: Request) {
     
         // Generate a streaming response from Groq
         const { textStream } = await streamText({
-            model: model,
-            system: "You are a helpful cooking assistant. You provide recipe suggestions, cooking tips, ingredient substitutions, and answer questions about food preparation. Your main task will be analyzing images of ingredients and provide suggestions for recipes based on the ingredients in the image. You can provide multiple recipes using multiple combinations of ingredients. Keep your responses focused on cooking and food-related topics.",
+            model,
+            system: "You are a helpful cooking assistant. You provide recipes with a list of ingredients and step by step instructions. And answer questions about food preparation. Your main task will be analyzing images of ingredients and provide suggestions for recipes based on the ingredients in the image. When providing recipe instructions, please format your response in Markdown. Use headings (#), bulleted lists (*), and code blocks for clarity when needed.You can provide multiple recipes using multiple combinations of ingredients. Keep your responses focused on cooking and food-related topics.",
             messages: formattedMessages,
             temperature: 0.7,
             maxTokens: 1024,
         });
-  
-        // Return a streaming response to the client
-        return textStream.toDataStreamResponse({
-            sendSources: true
+
+        // Return a standard SSE response
+        return new Response(textStream as any, {
+            headers: {
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+            },
         });
+
     } catch (error) {
         console.error("Error in chat API route:", error);
         return new Response(

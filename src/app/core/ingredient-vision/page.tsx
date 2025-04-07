@@ -5,7 +5,8 @@ import { Utensils, Send, ImageIcon, Loader2 } from "lucide-react"
 
 import Link from "next/link";
 import { useChat } from "@ai-sdk/react"
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -13,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
-import { Key, useState } from "react";
+import { Key } from "react";
 
 import {
     ClerkProvider,
@@ -32,9 +33,30 @@ export default function IngredientVision() {
     
     // useChat hook to handle chat
     // returns: array of chat messages, current value of input field, function to handle input change, function to handle submit, boolean to check if loading
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-      api: "/api/chat"
+    const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
+      api: "/api/chat",
+      streamProtocol: 'text',
+      onResponse: (response: any) => {
+        console.log("Response received:", response);
+        console.log("Response status:", response.status);
+        console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+      },
+      onError: (error: any) => {
+        console.error("Chat error:", error);
+      },
+      onStream: (partialChunk: string) => {
+        console.log("Streaming chunk:", partialChunk);
+      },
+      onFinish: () => {
+        console.log("Streaming complete.");
+      },
     })
+
+    const [assistantResponse, setAssistantResponse] = useState("");
+
+    useEffect(() => {
+      console.log("Current messages:", messages);
+    }, [messages]);
 
     // handle file change
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +113,7 @@ export default function IngredientVision() {
                                     </Avatar>
                                     <div
                                     className={`rounded-lg px-4 py-2 ${
-                                        message.role === "user" ? "bg-[var(--groq-orange)] text-white" : "bg-white border border-gray-200"
+                                        message.role === "user" ? "bg-[var(--groq-orange)] text-white" : "bg-[var(--groq-bg)] border border-gray-100"
                                     }`}
                                     >
                                     {message.content}
@@ -177,6 +199,36 @@ export default function IngredientVision() {
                     <h3 className="text-lg font-medium text-gray-900">Please sign in to continue</h3>
                 </div>
             </SignedOut>
+
+            {/* Show assistant response as it streams: */}
+            <div className="p-4">
+                {assistantResponse}
+            </div>
+
+            {/* Show a "Save" button only AFTER the current stream is complete. */}
+            {!isLoading && assistantResponse && (
+                <button onClick={() => saveRecipe(assistantResponse)}>
+                    Save Recipe
+                </button>
+            )}
         </div>
     )
+}
+
+// call the saveRecipe API endpoint
+async function saveRecipe(recipeText: string) {
+    try {
+        const resp = await fetch("/api/saveRecipe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ recipe: recipeText }),
+        });
+        if (!resp.ok) {
+            throw new Error("Failed to save recipe");
+        }
+        alert("Recipe saved!");
+    } catch (err: any) {
+        console.error(err);
+        alert("Error saving recipe");
+    }
 }
